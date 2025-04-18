@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/navigation-menu';
 
 const Navbar = () => {
-  const { cartItems, totalPrice } = useCart();
+  const { cartItems, totalPrice, removeFromCart, updateQuantity } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const cartItemsCount = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -102,9 +102,33 @@ const Navbar = () => {
                             </div>
                             <div className="flex-1">
                               <h3 className="font-semibold">{item.name}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {item.quantity} x {item.price} ₽
-                              </p>
+                              <div className="flex justify-between items-center mt-1">
+                                <div className="flex items-center gap-2">
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                    className="text-sm text-muted-foreground hover:text-foreground"
+                                    disabled={item.quantity <= 1}
+                                  >
+                                    -
+                                  </button>
+                                  <span className="text-sm">{item.quantity}</span>
+                                  <button 
+                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                    className="text-sm text-muted-foreground hover:text-foreground"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm">{item.quantity * item.price} ₽</span>
+                                  <button 
+                                    onClick={() => removeFromCart(item.id)}
+                                    className="text-destructive hover:text-destructive/90"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </li>
                         ))}
@@ -117,9 +141,25 @@ const Navbar = () => {
                       <span>Итого:</span>
                       <span>{totalPrice} ₽</span>
                     </div>
-                    <Button className="w-full mt-4 bg-minecraft-green hover:bg-minecraft-green/90">
-                      Оформить заказ
-                    </Button>
+                    <div className="flex gap-2 mt-4">
+                      <Button
+                        variant="outline"
+                        className="flex-1 border-minecraft-green text-minecraft-green hover:bg-minecraft-green hover:text-white"
+                        asChild
+                      >
+                        <Link to="/cart">
+                          Просмотр
+                        </Link>
+                      </Button>
+                      <Button 
+                        className="flex-1 bg-minecraft-green hover:bg-minecraft-green/90"
+                        asChild
+                      >
+                        <Link to="/cart">
+                          Оформить
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </SheetContent>
@@ -146,6 +186,13 @@ const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Магазин
+            </Link>
+            <Link 
+              to="/cart" 
+              className="block py-2 text-white hover:bg-minecraft-green/30"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Корзина
             </Link>
             {categories.map((category) => (
               <Link

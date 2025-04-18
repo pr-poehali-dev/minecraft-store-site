@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import HomePage from "@/pages/HomePage";
 import ShopPage from "@/pages/ShopPage";
+import CartPage from "@/pages/CartPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/shop" element={<ShopPage />} />
+              <Route path="/cart" element={<CartPage />} />
               <Route path="/category/:category" element={<ShopPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
